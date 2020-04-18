@@ -1,22 +1,61 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Layout from "./hoc/Layout/Layout"
 import Quiz from "./containers/Quiz/Quiz"
-import {Route, Switch} from 'react-router-dom'
+import {Redirect, Route, Switch, withRouter} from 'react-router-dom'
 import QuizList from "./containers/QuizList/QuizList"
 import QiuzCreator from "./containers/QiuzCreator/QiuzCreator"
 import Auth from "./containers/Auth/Auth"
+import {connect} from "react-redux"
+import Logout from "./componets/Logout/Logout"
+import {autoLogin} from "./store/actions/auth"
 
-function App() {
-  return (
-    <Layout>
-      <Switch>
-        <Route path='/auth' component={Auth} />
-        <Route path='/quiz-creator' component={QiuzCreator} />
-        <Route path='/quiz/:id' component={Quiz} />
-        <Route path='/' component={QuizList} />
-      </Switch>
-    </Layout>
-  );
+class App extends Component {
+
+   componentDidMount() {
+      this.props.autoLogin()
+   }
+
+   render() {
+
+     let routs = (
+        <Switch>
+           <Route path='/auth' component={Auth} />
+           <Route path='/quiz/:id' component={Quiz} />
+           <Route path='/' exact component={QuizList} />
+           <Redirect to='/' />
+        </Switch>
+     )
+
+     if (this.props.isAuthenticated) {
+        routs = (
+           <Switch>
+              <Route path='/quiz-creator' component={QiuzCreator} />
+              <Route path='/quiz/:id' component={Quiz} />
+              <Route path='/logout' component={Logout} />
+              <Route path='/' exact component={QuizList} />
+              <Redirect to='/' />
+           </Switch>
+        )
+     }
+
+     return (
+        <Layout>
+           { routs }
+        </Layout>
+     )
+  }
 }
 
-export default App;
+function mapStateToProps(state) {
+   return {
+      isAuthenticated: !!state.auth.token
+   }
+}
+
+function mapDispatchToProps(dispatch) {
+   return {
+      autoLogin: () => dispatch(autoLogin())
+   }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
