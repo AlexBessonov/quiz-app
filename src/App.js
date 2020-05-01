@@ -17,33 +17,33 @@ class App extends Component {
 
    render() {
 
-     let routs = (
-        <Switch>
-           <Route path='/auth' component={Auth} />
-           <Route path='/quiz/:id' component={Quiz} />
-           <Route path='/' exact component={QuizList} />
-           <Redirect to='/' />
-        </Switch>
-     )
+      let routs = (
+         <Switch>
+            <Route path='/auth' component={Auth}/>
+            <Route path='/quiz/:id' component={Quiz}/>
+            <Route path='/' exact component={QuizList}/>
+            <Redirect to='/'/>
+         </Switch>
+      )
 
-     if (this.props.isAuthenticated) {
-        routs = (
-           <Switch>
-              <Route path='/quiz-creator' component={QiuzCreator} />
-              <Route path='/quiz/:id' component={Quiz} />
-              <Route path='/logout' component={Logout} />
-              <Route path='/' exact component={QuizList} />
-              <Redirect to='/' />
-           </Switch>
-        )
-     }
+      if (this.props.isAuthenticated) {
+         routs = (
+            <Switch>
+               <Route path='/quiz-creator' component={QiuzCreator}/>
+               <Route path='/quiz/:id' component={Quiz}/>
+               <Route path='/logout' component={Logout}/>
+               <Route path='/' exact component={QuizList}/>
+               <Redirect to='/'/>
+            </Switch>
+         )
+      }
 
-     return (
-        <Layout>
-           { routs }
-        </Layout>
-     )
-  }
+      return (
+         <Layout>
+            {routs}
+         </Layout>
+      )
+   }
 }
 
 function mapStateToProps(state) {
